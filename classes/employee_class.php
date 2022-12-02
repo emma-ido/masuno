@@ -20,6 +20,46 @@ class employee extends db_connection {
 		}
 	}
 
+	function select_all_employees() {
+		$sql = "SELECT * FROM employee";
+		return $this->db_fetch_all($sql);
+	}
+
+	function get_hourly_rate($employee_id) {
+		$sql = "SELECT hourly_rate FROM employee WHERE id=$employee_id";
+		$hourly_rate = $this->db_fetch_one($sql);
+		if($this->db_count() == 0) {
+			return -1;
+		}
+		return $hourly_rate["hourly_rate"];
+	}
+
+	function is_available_at_time($new_booking_start_time, $new_booking_end_time) {
+		$dt = new DateTime($new_booking_start_time);
+		$date = $dt->format('Y-m-d');
+		$sql = "SELECT * FROM bookings WHERE DATE(start_time) = '$date' AND start_time <= '$new_booking_end_time' AND start_time >= '$new_booking_start_time'";
+		$this->db_query($sql);
+		if($this->db_count() > 0) {
+			return false;
+		}
+		return true;
+	}
+
+	function select_all_employees_gen($gender) {
+		$sql = "SELECT * FROM employee WHERE gender='$gender'";
+		return $this->db_fetch_all($sql);
+	}
+
+	function update_profile($employee_id, $content) {
+		$sql = "UPDATE employee SET employee_profile = '$content' WHERE id=$employee_id";
+		return $this->db_query($sql);
+	}
+
+	function get_profile($employee_id) {
+		$sql = "SELECT employee_profile FROM employee WHERE id=$employee_id";
+		return $this->db_fetch_one($sql)["employee_profile"];
+	}
+
 	function login($email, $password) {
 		if(!$this->emailExists($email)) {
 			return array(false, "Email already exists");
@@ -47,7 +87,7 @@ class employee extends db_connection {
 
 	function get_employee_name($id) {
 		$sql = "SELECT first_name, last_name FROM employee WHERE id=$id";
-		$names = $this->db_fetch_one($sql)["email"];
+		$names = $this->db_fetch_one($sql);
 		return $names["first_name"] . " " .$names["last_name"];
 	}
 
