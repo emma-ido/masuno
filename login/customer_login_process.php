@@ -15,7 +15,7 @@ if(isset($_POST['customer_login'])) {
 		$_SESSION['customer_id'] = $results[1];
 		header("Location: ../index.php");
 	} else {
-		header("Location: customer_login.php?error=$results[1]");
+		header("Location: customer_login.php?error=Incorrect email or password");
 	}
 }
 

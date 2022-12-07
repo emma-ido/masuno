@@ -21,7 +21,8 @@ if($employee_id == -1) {
 	<script src="//cdn.ckeditor.com/4.20.0/full/ckeditor.js"></script>
 </head>
 <body>
-
+	<?php include_once("navbar.php"); ?>
+	<br><br><br>
 	<div class="container mx-auto">
 		<form method="POST" action="edit_profile_process.php" style="text-align: center;">
 			<textarea name="content"><?php print_employees_profile($employee_id); ?></textarea>

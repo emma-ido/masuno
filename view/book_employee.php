@@ -1,11 +1,22 @@
 <?php
 include_once('../settings/core.php');
 include_once('../controllers/employee_controller.php');
+include_once('../controllers/customer_controller.php');
 include_once('../actions/booking_functions.php');
+
+
 
 if(isset($_GET['id'])) {
 
 	$employee_id = $_GET['id'];
+	$customer_id = getCustomerId();
+
+	if($customer_id == -1) {
+		header("Location: ../login/customer_login.php?error=You must be logged in to continue");
+	}
+
+	$customer_email = get_email($customer_id);
+
 	$hourly_rate = get_hourly_rate($employee_id);
 	if($hourly_rate == -1) {
 		header("Location: search_for_employee.php");
@@ -25,14 +36,15 @@ if(isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
+	<?php include_once("navbar.php"); ?>
 	<br>
 	<br>
 	<script type="text/javascript" src="../js/booking.js"></script>
 	<div class="mx-auto" style="width: 65%;">
 		<?php echo "<h2 class='font-weight-normal' style='text-align: center;'>Book Employee</h2>"; ?>
 		<hr>
-	  <form id="theForm" action="registerprocess.php" method="POST">
-
+	  <form id="bookEmployeeForm" action="../actions/book_employee_process.php" method="POST">
+	  	<?php echo "<input type='hidden' value='$customer_email' id='email-address'>"; ?>
 	    <div class="row form-group">	        
 	        <div class="col">
 	        	<label>Employee Name</label>
@@ -41,13 +53,14 @@ if(isset($_GET['id'])) {
 	        
 	        <div class="col">
 	        	<label>Hourly Rate</label>
-	  			<?php echo "<input type='text' class='form-control' value='$hourly_rate' readonly>"; ?>
+	  			<?php echo "<input type='text' class='form-control' id='hourly_rate' value='$hourly_rate' readonly>"; ?>
 	        </div>
 	    </div>
-
+	    <?php echo "<input type='hidden' name='employee_id' id='employee_id' value='$employee_id'>";
+	    	  echo "<input type='hidden' name='customer_id' id='customer_id' value='$customer_id'>"; ?>
 	    <div class="form-group">
-	      <label for="amount">Total Amount</label>
-	      <input type="number" name="amount" class="form-control" id="amount" readonly>
+	      <label for="amount">Total Amount <span class="font-weight-bold">(GHC)</span></label>
+	      <input type="number" name="amount" class="form-control" value=0.0 id="amount" readonly>
 	    </div>
 
 
@@ -58,16 +71,23 @@ if(isset($_GET['id'])) {
 	      </select>
 	    </div>
 
-	    <span style="color: red;" class="font-weight-bold" id="timeError"></span>
+	    <span class="font-weight-bold badge badge-danger" id="timeError"></span>
 	    <div class="row form-group">       
 	        <div class="col">
 	        	<label>Start Time</label>
-	  			<input type='datetime-local' class='form-control' name="start_time" id="start_time" required>
+	        	<?php  
+	        	$today = date("Y-m-d H:i:s");
+	        	$today .= "T00:00:00";
+	        	echo "<input type='datetime-local' min='$today' class='form-control' onchange='calculateAmt()' name='start_time' id='start_time' required>";
+	        	?>
+	  			
 	        </div>
 	        
 	        <div class="col">
 	        	<label>Estimated End Time</label>
-	  			<input type='datetime-local' class='form-control' name="end_time" id="end_time">
+	  			<?php
+	  			echo "<input type='datetime-local' min='$today' class='form-control' onchange='calculateAmt()' name='end_time' id='end_time' required>";
+	  			?>
 	        </div>
 	    </div>
 
@@ -80,7 +100,7 @@ if(isset($_GET['id'])) {
 	    	<label for="address">Address</label>
 	    	<textarea name="address" maxlength="500" class="form-control" placeholder="Include any landmarks and navigation tips" required></textarea>
 	    </div>
-
+	    <input type="hidden" value="book_employee" name="book_employee">
 	    <div class="row">
 	    	<div class="col">
 	    		<input type="button" name="new_account" onclick="validateBookingForm()" value="Find Availability" class="btn btn-primary"></input>	

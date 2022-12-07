@@ -13,7 +13,7 @@ if(isset($_POST['employee_login'])) {
 		unset_session_variables();
 		$_SESSION['employee_active'] = true;
 		$_SESSION['employee_id'] = $results[1];
-		header("Location: ../index.php");
+		header("Location: ../employee/view_bookings.php");
 	} else {
 		header("Location: employee_login.php?error=$results[1]");
 	}

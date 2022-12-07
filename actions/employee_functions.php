@@ -15,7 +15,7 @@ function search_employees($gender=null) {
 	} else {
 		$employees = select_all_employees();
 	}
-
+	// echo count($employees);
 	$html = "<div class='row' style='text-align: center;'>";
 	$i = 0;
 	foreach($employees as $employee) {
@@ -23,11 +23,14 @@ function search_employees($gender=null) {
 		$first_name = $employee["first_name"];
 		$last_name = $employee["last_name"];
 		$employee_image = $employee["employee_image"];
+		if($employee_image == null) {
+			$employee_image = "../images/employee_images/milhouse_van_houten.jpg";
+		}
 		$hourly_rate = $employee["hourly_rate"];
 
 		if($i == 4) {
 			$i = 0;
-			$html = "</div>
+			$html .= "</div>
 					 <div class='row' style='text-align: center;'>";
 		}
 

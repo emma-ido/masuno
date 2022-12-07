@@ -34,15 +34,43 @@ class employee extends db_connection {
 		return $hourly_rate["hourly_rate"];
 	}
 
-	function is_available_at_time($new_booking_start_time, $new_booking_end_time) {
+	function is_available_at_time($new_booking_start_time, $new_booking_end_time, $employee_id) {
 		$dt = new DateTime($new_booking_start_time);
 		$date = $dt->format('Y-m-d');
-		$sql = "SELECT * FROM bookings WHERE DATE(start_time) = '$date' AND start_time <= '$new_booking_end_time' AND start_time >= '$new_booking_start_time'";
-		$this->db_query($sql);
-		if($this->db_count() > 0) {
+		$sql = "SELECT start_time, end_time FROM bookings WHERE DATE(start_time) = '$date' AND status != 'Rejected'";
+
+		//SELECT * FROM bookings WHERE DATE(start_time) = '$date' AND start_time <= '$new_booking_end_time' OR end_time > '$new_booking_start_time'
+		// "SELECT * FROM bookings WHERE DATE(start_time) = '$date' AND start_time <= '$new_booking_end_time' AND start_time >= '$new_booking_start_time'"
+		$times = $this->db_fetch_all($sql);
+		if($this->db_count() > 1) {
 			return false;
 		}
-		return true;
+		if($this->db_count() == 0) {
+			return true;
+		}
+
+		$current_time = array($this->convert_to_epoch($times[0]["start_time"]), $this->convert_to_epoch($times[0]["end_time"]));
+		$new_time = array($this->convert_to_epoch($new_booking_start_time), $this->convert_to_epoch($new_booking_end_time));
+
+		$intervals = array();
+		if($new_time[0] < $current_time[0]) {
+			$intervals[0] = $new_time;
+			$intervals[1] = $current_time;
+		} else {
+			$intervals[0] = $current_time;
+			$intervals[1] = $new_time;
+		}
+
+		return !($intervals[0][1] >= $intervals[1][0]);
+		// if($this->db_count() > 0) {
+		// 	return false;
+		// }
+		// return true;
+	}
+
+	function convert_to_epoch($datetime) {
+		$dt = new DateTime($datetime);
+		return $dt->format('U');
 	}
 
 	function select_all_employees_gen($gender) {
@@ -62,7 +90,7 @@ class employee extends db_connection {
 
 	function login($email, $password) {
 		if(!$this->emailExists($email)) {
-			return array(false, "Email already exists");
+			return array(false, "Email or password incorrect");
 		} else {
 			$emplyee_from_db = $this->get_employee_with_email($email);
 			return array(password_verify($password, $emplyee_from_db["pass"]), $emplyee_from_db["id"]);
@@ -96,4 +124,14 @@ class employee extends db_connection {
 		return $this->db_fetch_one($sql);	
 	}
 }
+
+
+// $employee = new employee();
+// $new_booking_start_time = '2022-12-06 8:00:00';
+// $new_booking_end_time = '2022-12-06 10:59:00';
+// if($employee->is_available_at_time($new_booking_start_time, $new_booking_end_time, 2)) {
+// 	echo "<br><br>AVAILABLE<br><br>";
+// } else {
+// 	echo "<br><br>UNAVAILABLE<br><br>";
+// }
 ?>

@@ -14,12 +14,13 @@ include_once("../actions/employee_functions.php");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
+	<?php include_once("navbar.php") ?>
 	<br><br>
 	<div class="mx-auto" style="width: 95%;">
 		
 	    <div style="text-align: center;">
-	    	<h4>FILTER</h4>
-		    <a href="search_for_employee.php" class="btn btn-primary">RESET</a> <a href="search_for_employee.php?gender=M" class="btn btn-primary">MALE</a> <a href="search_for_employee.php?gender=F" class="btn btn-primary">FEMALE</a>
+	    	<h4>Find Employee</h4>
+		    <a style="border-bottom-left-radius: 20px;border-top-left-radius: 20px;" href="search_for_employee.php" class="btn btn-primary">RESET</a> <a href="search_for_employee.php?gender=M" class="btn btn-primary">MALE</a> <a style="border-bottom-right-radius: 20px;border-top-right-radius: 20px;" href="search_for_employee.php?gender=F" class="btn btn-primary">FEMALE</a>
 		</div>
 	    <hr style="width: 75%;">
 		<?php

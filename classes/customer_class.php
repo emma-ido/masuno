@@ -40,6 +40,10 @@ class customer extends db_connection {
 		}
 	}
 
+	function get_customer_by_id($id) {
+		$sql = "SELECT * FROM customer WHERE id=$id";
+		return $this->db_fetch_one($sql);
+	}
 
 	function get_id_from_email($email) {
 		$sql = "SELECT id FROM customer WHERE email='$email'";
@@ -49,6 +53,22 @@ class customer extends db_connection {
 	function get_customer_with_email($email) {
 		$sql = "SELECT * FROM customer WHERE email='$email'";
 		return $this->db_fetch_one($sql);
+	}
+
+	function get_customer_name($id) {
+		$sql = "SELECT first_name, last_name FROM customer WHERE id=$id";
+		$result = $this->db_fetch_one($sql);
+		return $result["first_name"]. " " .$result["last_name"];
+	}
+
+	function get_phone_number($id) {
+		$sql = "SELECT phone_number FROM customer WHERE id=$id";
+		return $this->db_fetch_one($sql)["phone_number"];
+	}
+
+	function get_email($id) {
+		$sql = "SELECT email FROM customer WHERE id=$id";
+		return $this->db_fetch_one($sql)["email"];
 	}
 }
 

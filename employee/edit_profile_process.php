@@ -13,9 +13,9 @@ if(isset($_POST["edit_profile"])) {
 	$content = $_POST["content"];
 
 	if(update_profile($employee_id, $content)) {
-		header("Location: index.php?success=Successfuly updated profile");
+		header("Location: view_bookings.php?success=Successfuly updated profile");
 	} else {
-		header("Location: index.php?error=Failed to update profile");
+		header("Location: view_bookings.php?error=Failed to update profile");
 	}
 
 	// echo $content;

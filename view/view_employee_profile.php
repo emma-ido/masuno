@@ -1,6 +1,7 @@
 <?php
 include_once("../settings/core.php");
 include_once("../actions/employee_functions.php");
+include_once("../actions/booking_functions.php");
 
 
 
@@ -18,16 +19,18 @@ if(isset($_GET["id"])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-
+	<?php include_once("navbar.php") ?>
+	<br><br><br>
 	<div class="mx-auto">
 		<div class="container">
-			<div class="row mx-auto">
-				<div class="col"><h3>Book Now </h3></div>
-				<div class="col"><button class="btn btn-primary"><span class="font-weight-bold">Book</span></button></div>
+			<div class="mx-auto">
+				<span class="font-weight-bold" style="font-size: x-large;">Book <?php echo get_employee_name($employee_id); ?></span>
+				<span style="color: white;">pp</span>
+				<?php echo "<a href='book_employee.php?id=$employee_id' class='btn btn-primary'><span class='font-weight-bold'>Book</span></a>"; ?>
+				<hr>
 			</div>
 		</div>
 	</div>
-	<br>
 	<br>
 	<div class="container">
 		<?php
@@ -39,7 +42,19 @@ if(isset($_GET["id"])) {
 		<br><br><br>
 		<hr>
 		<h2 style="text-align: center;">View This Employees Reviews</h2>
-		
+		<?php get_employees_average_stars($employee_id); ?>
+		<hr>
+		<table class="table table-hover">
+			  <thead class="thead-dark">
+			    <tr>
+			    	<th scope="col">Rating</th>
+			        <th scope="col">Comment</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	<?php get_employees_reviews_tabular($employee_id); ?>
+			  </tbody>
+		</table>
 	</div>
 </body>
 </html>

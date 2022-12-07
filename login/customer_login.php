@@ -1,3 +1,6 @@
+<?php
+include_once("../settings/core.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,19 +12,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-	<?php
-	    if(isset($_GET["error"])) {
-	    	echo "<span class='badge badge-danger'>$_GET[error]</span>";
-	    } else if(isset($_GET["success"])) {
-	    	echo "<span class='badge badge-success'>$_GET[success]</span>";
-	    } 
-  	?>
+	<?php include_once("../view/navbar.php"); ?>
+	<br><br>
+	
+  	<div class="container" style="width: 75%;">
+  		
+  			<h3>Login to your account</h3>
+  			<hr>
+  			<?php
+			    if(isset($_GET["error"])) {
+			    	echo "<span class='badge badge-danger'>$_GET[error]</span>";
+			    } else if(isset($_GET["success"])) {
+			    	echo "<span class='badge badge-success'>$_GET[success]</span>";
+			    } 
+		  	?>
 
-	<form action="customer_login_process.php" method="POST">
-		<input type="email" name="email" placeholder="email">
-		<input type="password" name="password" placeholder="password">
-		<input type="submit" value="login" name="customer_login">
-	</form>
+			<form action="customer_login_process.php" method="POST">
+				<div class="form-row align-items-center">
+					<div class="col-auto">
+						<input class="form-control" type="email" name="email" placeholder="Email">
+					</div>
+					<div class="col-auto">
+						<input type="password" class="form-control" name="password" placeholder="Password">		
+					</div>
+						<input type="hidden" name="customer_login" value="login">
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary">Log in</button>
+					</div>
+				</div>
+			</form>	
+  		
+	</div>
 
 </body>
 </html>

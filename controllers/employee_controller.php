@@ -11,9 +11,9 @@ function get_hourly_rate($employee_id) {
 	return $employee->get_hourly_rate($employee_id);
 }
 
-function is_available_at_time($new_booking_start_time, $new_booking_end_time) {
+function is_available_at_time($new_booking_start_time, $new_booking_end_time, $employee_id) {
 	$employee = new employee();
-	return $employee->is_available_at_time($new_booking_start_time, $new_booking_end_time);
+	return $employee->is_available_at_time($new_booking_start_time, $new_booking_end_time, $employee_id);
 }
 
 function employee_login($email, $password) {
